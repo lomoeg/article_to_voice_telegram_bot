@@ -1,5 +1,4 @@
 import requests
-import base64
 
 
 # check url via regex and then try to ping it
@@ -23,11 +22,3 @@ def is_valid_url(url):
         return True
     else:
         return False
-
-
-# Encode url into base64
-def base64_encoded_url(url):
-    message_bytes = url.encode('ascii')
-    base64_bytes = base64.b64encode(message_bytes)
-    base64_msg_str = base64_bytes.decode('ascii')
-    return base64_msg_str
