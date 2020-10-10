@@ -1,7 +1,7 @@
 import telebot
 import config
 import synthesize_speech
-from url_validate import is_valid_url
+from url_validate import *
 from article_parser import get_clean_article
 
 
@@ -30,13 +30,16 @@ def get_audiofile(message):
 
             # Get dict with extracted article data
             article = get_clean_article(url)
-            print(article['text_blocks'])
+
+            # Encode url to base64 (to avoid problems with filenames with '/' in unix)
+            audio_name = base64_encoded_url(url)
 
             # Synthesize audiofile in mp3 format
-            synthesize_speech.get_audio(article['text_blocks'])
+            synthesize_speech.get_audio(audio_name + ".ogg", article['text_blocks'])
             bot.send_message(message.chat.id, 'Речь синтезирована, загружаю аудиофайл.')
 
-            audiofile = open('speech.mp3', 'rb')
+            audiofile = open(config.folder + audio_name + ".mp3", 'rb')
+
             au = bot.send_audio(message.chat.id, audiofile,
                                 None,
                                 'something',
@@ -45,9 +48,6 @@ def get_audiofile(message):
             audiofile.close()
         else:
             bot.reply_to(message, 'Прости, это не похоже на ссылку. А может просто сайт недоступен.')
-            audiofile = open('speech.mp3', 'rb')
-            bot.send_audio(message.chat.id, config.sample_audio_file_id)
-            audiofile.close()
     except Exception as e:
         bot.reply_to(message, 'Что-то пошло не так.')
         print(str(e))

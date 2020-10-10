@@ -1,1 +1,1 @@
-ftransc -f mp3 speech.ogg -w
+ftransc -f mp3 data/$1 -w

@@ -1,9 +1,11 @@
 from newspaper import Article
+from config import folder
+from url_validate import base64_encoded_url
 
 
 # Extract article in text format from html page
 def get_clean_article(url):
-    f_out = open("article.txt", 'w')
+    f_out = open(folder + base64_encoded_url(url) + ".txt", 'w')
     article = Article(url)
 
     article.download()
@@ -11,14 +13,13 @@ def get_clean_article(url):
 
     print(article.text, file=f_out)
     f_out.close()
+
     return {'text_blocks': divide_text(article.text), 'title': article.title, 'sitename': article.source_url}
 
 
 # Divide large text into parts <5000 symbols (naive implementation)
 # Return array of text parts of len < 5000 symbols
 def divide_text(text):
-    # text_blocks_count = ceil(len(text) / 5000)
-    f_0 = open("full_parts.txt", 'w')
     if len(text) <= 5000:
         return [text]
     else:
@@ -34,6 +35,8 @@ def divide_text(text):
             else:
                 divided_text_array.append(part)
                 idx += 5000
-            print(part[:end_of_block+2], file=f_0)
-    f_0.close()
     return divided_text_array
+
+
+# get_clean_article("https://rb.ru/opinion/proptech-against-crisis/")
+# print(divide_text())
