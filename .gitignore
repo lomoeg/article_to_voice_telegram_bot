@@ -1,8 +1,9 @@
 config.py
+curl-speech.sh
 *.ogg
 *.mp3
-curl-speech.sh
 .idea/
 __pycache__/
+data/
 
 
